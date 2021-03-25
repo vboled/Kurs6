@@ -11,7 +11,7 @@ typedef double(*func) (double x);
 
 class Kursach {
 private:
-	double step;
+	int n;
 	double t0;
 	double t;
 	std::string outputFile;

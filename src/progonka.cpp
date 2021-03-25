@@ -8,34 +8,32 @@ void Kursach::progonka() {
         cout << "Output file doesn't open!!!";
         exit(0);
     }
-    double n = (t - t0) / step, tmp;
+    double step = (t - t0) / n;
+    double tmp;
     vector<double> a, b;
-    a.resize(n);
-    b.resize(n);
+    a.resize(n + 1);
+    b.resize(n + 1);
     tmp = system[0][0];
     a[0] = -system[0][1] / tmp;
     b[0] = right[0] / tmp;
     // прямой ход
-    for (size_t i = 0; i < n - 1; i++) {
+    for (size_t i = 0; i <= n; i++) {
         tmp = system[i][i] + system[i][i - 1] * a[i - 1];
         a[i] = -system[i][i + 1] / tmp;
         b[i] = (right[i] - system[i][i - 1] * b[i - 1]) / tmp;
     }
 	// обратный ход
-    res.resize(n);
-    res[n - 1] = (right[n - 1] - system[n - 1][n - 1 - 1] * b[n - 1 - 1])
-    / (system[n - 1][n - 1] + system[n - 1][n - 1 - 1] * a[n - 1 - 1]);
-    double tmp_t = t;
-    out << t0 << " " << initCond << endl;
-    for (int i = n - 2; i >= 0; i--) {
-        tmp_t -= step;
+    res.resize(n - 1);
+    res[n - 2] = b[n];
+    for (int i = n - 3; i >= 0; i--) {
         res[i] = a[i] * res[i + 1] + b[i];
     }
-    tmp_t = t0;
-    for (int i = 0; i < n - 1; i++) {
-        tmp_t += step;
+    res.insert(res.begin(), initCond);
+    res.push_back(boardCond);
+    double tmp_t = t0;
+    for (int i = 0; i < n + 1; i++) {
         out << tmp_t << " " << res[i] << endl;
+        tmp_t += step;
     }
-    out << t << " " << boardCond << endl;
 	out.close();
 }

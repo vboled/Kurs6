@@ -12,18 +12,18 @@ double Kursach::exactSolution(double x) {
 }
 
 void Kursach::setSystem() {
-    double n = (t - t0) / step;
-    system.resize(n);
-    right.resize(n);
-    right[n - 1] = boardCond / step;
+    double step = (t - t0) / n;
+    system.resize(n + 1);
+    right.resize(n + 1);
+    right[n] = boardCond / step;
     double xi = t0;
-    for (size_t i = 0; i < n; i++) {
-        system[i].resize(n);
+    for (size_t i = 0; i < n + 1; i++) {
+        system[i].resize(n + 1);
         if (i == 0) {
             system[i][0] = 2 / step;
             system[i][1] = -1 / step;
         }
-        else if (i == n - 1) {
+        else if (i == n) {
             system[i][i - 1] = -1 / step;
             system[i][i] = 2 / step;
         }
@@ -36,7 +36,7 @@ void Kursach::setSystem() {
 }
 
 double Kursach::residual() {
-    double n = (t - t0) / step, max = 0, tmp_t = t0;
+    double step = (t - t0) / n, max = 0, tmp_t = t0;
     int maxi = 0;
     for (size_t i = 0; i < n; i++) {
         tmp_t += step;
@@ -49,22 +49,22 @@ double Kursach::residual() {
 }
 
 double Kursach::relativeError() {
-    double n = (t - t0) / step, max = 0, tmp_t = t0;
-    for (size_t i = 0; i < n; i++) {
-        tmp_t += step;
+    double step = (t - t0) / n, max = 0, tmp_t = t0;
+    for (size_t i = 0; i < n + 1; i++) {
         if (exactSolution(tmp_t) != 0.0) {
             double tmp = fabs(exactSolution(tmp_t) - res[i]) / fabs(exactSolution(tmp_t));
             if (tmp > max)
                 max = tmp;
         }
+        tmp_t += step;
     }
     return max;
 }
 
 void Kursach::printSystem() {
-    double n = (t - t0) / step;
-    for (size_t i = 0; i < n; i++) {
-        for (size_t j = 0; j < n; j++) {
+    double step = (t - t0) / n;
+    for (size_t i = 0; i < n + 1; i++) {
+        for (size_t j = 0; j < n + 1; j++) {
             cout << system[i][j] << " ";
         }
         cout << " | " << right[i] << endl;
@@ -90,8 +90,8 @@ Kursach::Kursach(string inputFile) {
 			boardCond = stod(value);
 		else if (word == "outputFile:")
 			outputFile = value;
-		else if (word == "step:")
-			step = stod(value);
+		else if (word == "N:")
+			n = stoi(value);
 		else {
 			cout << "I don't now such paramert as: \" " << word << "\"";
 			fin.close();
