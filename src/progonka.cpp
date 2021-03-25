@@ -3,11 +3,11 @@
 using namespace std;
 
 void Kursach::progonka() {
-    // ofstream out(outputFile);
-	// if (!out.is_open()) {
-    //     cout << "Output file doesn't open!!!";
-    //     exit(0);
-    // }
+    ofstream out(outputFile);
+	if (!out.is_open()) {
+        cout << "Output file doesn't open!!!";
+        exit(0);
+    }
     double n = (t - t0) / step, tmp;
     vector<double> a, b;
     a.resize(n);
@@ -25,12 +25,17 @@ void Kursach::progonka() {
     res.resize(n);
     res[n - 1] = (right[n - 1] - system[n - 1][n - 1 - 1] * b[n - 1 - 1])
     / (system[n - 1][n - 1] + system[n - 1][n - 1 - 1] * a[n - 1 - 1]);
-    // out << t << " " << res[n - 1] << endl;
     double tmp_t = t;
+    out << t0 << " " << initCond << endl;
     for (int i = n - 2; i >= 0; i--) {
         tmp_t -= step;
         res[i] = a[i] * res[i + 1] + b[i];
-        // out << tmp_t << " " << res[i] << endl;
     }
-	// out.close();
+    tmp_t = t0;
+    for (int i = 0; i < n - 1; i++) {
+        tmp_t += step;
+        out << tmp_t << " " << res[i] << endl;
+    }
+    out << t << " " << boardCond << endl;
+	out.close();
 }

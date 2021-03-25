@@ -8,14 +8,14 @@ using namespace std;
 double Kursach::exactSolution(double x) {
     if (x == 0)
         return 0;
-    return boardCond / x;
+    return boardCond * x;
 }
 
 void Kursach::setSystem() {
     double n = (t - t0) / step;
     system.resize(n);
     right.resize(n);
-    right[n - 1] = -boardCond / step;
+    right[n - 1] = boardCond / step;
     double xi = t0;
     for (size_t i = 0; i < n; i++) {
         system[i].resize(n);
@@ -39,14 +39,25 @@ double Kursach::residual() {
     double n = (t - t0) / step, max = 0, tmp_t = t0;
     int maxi = 0;
     for (size_t i = 0; i < n; i++) {
+        tmp_t += step;
         double tmp = fabs(exactSolution(tmp_t) - res[i]);
         if (tmp > max) {
             max = tmp;
-            maxi = i;
         }
-        tmp_t += step;
     }
-    cout << maxi << endl;
+    return max;
+}
+
+double Kursach::relativeError() {
+    double n = (t - t0) / step, max = 0, tmp_t = t0;
+    for (size_t i = 0; i < n; i++) {
+        tmp_t += step;
+        if (exactSolution(tmp_t) != 0.0) {
+            double tmp = fabs(exactSolution(tmp_t) - res[i]) / fabs(exactSolution(tmp_t));
+            if (tmp > max)
+                max = tmp;
+        }
+    }
     return max;
 }
 

@@ -29,4 +29,5 @@ public:
 	void progonka();
 	void setSystem();
 	double residual();
+	double relativeError();
 };
