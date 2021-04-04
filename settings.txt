@@ -3,4 +3,4 @@ t1: 1
 initCond: 0
 boardCond: 0.00005
 outputFile: out.txt
-N: 100
+N: 10
