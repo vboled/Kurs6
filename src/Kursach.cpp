@@ -9,6 +9,7 @@ double Kursach::exactSolution(double x) {
     if (x == 0)
         return 0;
     return boardCond * x;
+    return p / e * x;
 }
 
 void Kursach::setSystem() {
@@ -92,6 +93,10 @@ Kursach::Kursach(string inputFile) {
 			outputFile = value;
 		else if (word == "N:")
 			n = stoi(value);
+        else if (word == "E:")
+			e = stod(value);
+        else if (word == "P:")
+			p = stod(value);
 		else {
 			cout << "I don't now such paramert as: \" " << word << "\"";
 			fin.close();

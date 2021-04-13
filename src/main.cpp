@@ -5,7 +5,7 @@ using namespace std;
 int main() {
    Kursach k = Kursach("settings.txt");
    k.setSystem();
-   // k.printSystem();
+   k.printSystem();
    k.progonka();
    cout.precision(10);
    cout << "residual: " << k.residual() << endl;

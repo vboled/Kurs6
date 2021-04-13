@@ -14,6 +14,7 @@ private:
 	int n;
 	double t0;
 	double t;
+	double e, p;
 	std::string outputFile;
 	double initCond;
 	double boardCond;

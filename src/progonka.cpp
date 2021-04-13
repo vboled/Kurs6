@@ -13,7 +13,6 @@ void Kursach::progonka() {
     vector<double> a, b;
     a.resize(n + 1);
     b.resize(n + 1);
-    tmp = system[0][0];
     a[0] = -system[0][1] / tmp;
     b[0] = right[0] / tmp;
     // прямой ход

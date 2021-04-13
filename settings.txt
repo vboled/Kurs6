@@ -4,3 +4,5 @@ initCond: 0
 boardCond: 0.00005
 outputFile: out.txt
 N: 10
+P: 100000
+E: 200000000000000
