@@ -14,24 +14,25 @@ double Kursach::exactSolution(double x) {
 
 void Kursach::setSystem() {
     double step = (t - t0) / n;
-    system.resize(n + 1);
+    b.resize(n + 1);
+    c.resize(n + 1);
+    a.resize(n + 1);
     right.resize(n + 1);
     right[n] = boardCond / step;
     double xi = t0;
     for (size_t i = 0; i < n + 1; i++) {
-        system[i].resize(n + 1);
         if (i == 0) {
-            system[i][0] = 2 / step;
-            system[i][1] = -1 / step;
+            b[0] = 2 / step;
+            c[0] = -1 / step;
         }
         else if (i == n) {
-            system[i][i - 1] = -1 / step;
-            system[i][i] = 2 / step;
+            b[i] = 2 / step;
+            a[i] = -1 / step;
         }
         else {
-            system[i][i - 1] = -1 / step;
-            system[i][i] = 2 / step;
-            system[i][i + 1] = -1 / step;
+            a[i] = -1 / step;
+            b[i] = 2 / step;
+            c[i] = -1 / step;
         }
     }
 }
@@ -65,10 +66,13 @@ double Kursach::relativeError() {
 void Kursach::printSystem() {
     double step = (t - t0) / n;
     for (size_t i = 0; i < n + 1; i++) {
-        for (size_t j = 0; j < n + 1; j++) {
-            cout << system[i][j] << " ";
-        }
-        cout << " | " << right[i] << endl;
+        int j = 0, k = n;
+        while (j++ < i)
+            cout << "0 ";
+        cout << a[i] << " " << b[i] << " " << c[i] << " ";
+        while (k-- >= j)
+            cout << "0 ";
+        cout << "| " << right[i] << endl;
     }
 }
 
