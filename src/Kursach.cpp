@@ -8,7 +8,7 @@ using namespace std;
 double Kursach::exactSolution(double x) {
     if (x == 0)
         return 0;
-    return boardCond * x;
+    // return boardCond * x;
     return p / e * x;
 }
 
@@ -37,10 +37,35 @@ void Kursach::setSystem() {
     }
 }
 
+void Kursach::setSystem1() {
+    double step = (t - t0) / n;
+    b.resize(n + 1);
+    c.resize(n + 1);
+    a.resize(n + 1);
+    right.resize(n + 1);
+    right[n] = p / e;
+    double xi = t0;
+    for (size_t i = 0; i < n + 1; i++) {
+        if (i == 0) {
+            b[0] = 2 / step;
+            c[0] = -1 / step;
+        }
+        else if (i == n) {
+            b[i] = 1 / step;
+            a[i] = -1 / step;
+        }
+        else {
+            a[i] = -1 / step;
+            b[i] = 2 / step;
+            c[i] = -1 / step;
+        }
+    }
+}
+
 double Kursach::residual() {
     double step = (t - t0) / n, max = 0, tmp_t = t0;
     int maxi = 0;
-    for (size_t i = 0; i < n; i++) {
+    for (size_t i = 0; i < res.size(); i++) {
         tmp_t += step;
         double tmp = fabs(exactSolution(tmp_t) - res[i]);
         if (tmp > max) {
@@ -52,7 +77,7 @@ double Kursach::residual() {
 
 double Kursach::relativeError() {
     double step = (t - t0) / n, max = 0, tmp_t = t0;
-    for (size_t i = 0; i < n + 1; i++) {
+    for (size_t i = 0; i < res.size(); i++) {
         if (exactSolution(tmp_t) != 0.0) {
             double tmp = fabs(exactSolution(tmp_t) - res[i]) / fabs(exactSolution(tmp_t));
             if (tmp > max)
@@ -65,8 +90,8 @@ double Kursach::relativeError() {
 
 void Kursach::printSystem() {
     double step = (t - t0) / n;
-    for (size_t i = 0; i < n + 1; i++) {
-        int j = 0, k = n;
+    for (size_t i = 0; i < c.size(); i++) {
+        int j = 0, k = c.size() - 1;
         while (j++ < i)
             cout << "0 ";
         cout << a[i] << " " << b[i] << " " << c[i] << " ";
@@ -97,6 +122,8 @@ Kursach::Kursach(string inputFile) {
 			outputFile = value;
 		else if (word == "N:")
 			n = stoi(value);
+        else if (word == "M:")
+			m = stoi(value);
         else if (word == "E:")
 			e = stod(value);
         else if (word == "P:")
@@ -109,3 +136,4 @@ Kursach::Kursach(string inputFile) {
 	}
 	fin.close();
 }
+
